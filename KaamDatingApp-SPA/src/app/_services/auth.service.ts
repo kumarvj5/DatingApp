@@ -18,8 +18,7 @@ photoUrl = new BehaviorSubject<string>('../../assets/user.png');
 currentPhotoUrl = this.photoUrl.asObservable();
 
 constructor(private http: HttpClient) { }
-ChangeMemberPhoto(photoUrl: string)
-{
+ChangeMemberPhoto(photoUrl: string) {
   this.photoUrl.next(photoUrl);
 }
 
@@ -36,11 +35,11 @@ login(model: any) {
         this.ChangeMemberPhoto(this.currentUser.photoUrl);
       }
     })
-  )
+  );
 }
 
-register(model: any){
-  return this.http.post(this.baseurl + 'register', model);
+register(user: User){
+  return this.http.post(this.baseurl + 'register', user);
 }
 
 loggedIn(){

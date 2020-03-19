@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using KaamDatingApp.API.Data;
 using KaamDatingApp.API.Dtos;
+using KaamDatingApp.API.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KaamDatingApp.API.Controllers
 {
+    [ServiceFilter(typeof(LoguserActivity))]
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -23,13 +25,22 @@ namespace KaamDatingApp.API.Controllers
             _repo = repo;
         }
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
-            var users = await _repo.GetUsers();
-             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+            var currentUserId =int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var userFrom = await _repo.GetUser(currentUserId);
+            userParams.UserId = currentUserId;
+            if (string.IsNullOrEmpty(userParams.Gender))
+            {
+                userParams.Gender = userFrom.Gender =="male"? "female":"male";
+            }
+            var users = await _repo.GetUsers(userParams);
+            var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+            Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
+
             return Ok(usersToReturn);
         }
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name="GetUser")]
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _repo.GetUser(id);
