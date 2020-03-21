@@ -13,6 +13,9 @@ namespace KaamDatingApp.API.Data
          Task<bool> SaveAll();
          Task<PagedList<User>> GetUsers(UserParams userParams);
          Task<User> GetUser(int id);
+         Task<Message> GetMessage(int id);
+         Task<IEnumerable<Message>> GetMessageThread(int id, int recepientId);
+         Task<PagedList<Message>> GetMessagesGorUser(MessageParams messageParams);
          Task<Photo> GetPhoto(int id);
          Task<Photo> GetMainPhotoForUser(int userId);
          Task<Like> GetLike(int userId, int recepientId);

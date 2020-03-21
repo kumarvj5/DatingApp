@@ -19,7 +19,7 @@ namespace KaamDatingApp.API.Helpers
 
            var user = await repo.GetUser(userId);
            user.LastActive = DateTime.Now;
-          await repo.SaveAll();
+           await repo.SaveAll();
         }
     }
 }

@@ -10,6 +10,7 @@ namespace KaamDatingApp.API.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Like> Likes { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         protected  override void OnModelCreating(ModelBuilder builder)
         { 
@@ -26,6 +27,16 @@ namespace KaamDatingApp.API.Data
                 .HasOne(v =>v.Liker)
                 .WithMany(v =>v.Likees)
                 .HasForeignKey(v =>v.LikerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Message>()
+                .HasOne(v =>v.Sender)
+                .WithMany(v =>v.MessagesSent)
+                .OnDelete(DeleteBehavior.Restrict);
+                
+            builder.Entity<Message>()
+                .HasOne(v =>v.Recipient)
+                .WithMany(v =>v.MessagesReceived)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

@@ -24,6 +24,9 @@ namespace KaamDatingApp.API.Helpers
            CreateMap<Photo, PhotoForReturnDto>();
            CreateMap<PhotoForCreationDto,Photo>();
            CreateMap<UserForRegisterDto,User>();
+           CreateMap<MessageForCreationDto,Message>().ReverseMap();
+           CreateMap<MessageToReturnDto,Message>().ReverseMap().ForMember(dest =>dest.SenderPhotoUrl, ssr => ssr.MapFrom(c=>c.Sender.Photos.FirstOrDefault(d=>d.IsMain).Url))
+                                                               .ForMember(dest =>dest.RecipientPhotoUrl, ssr => ssr.MapFrom(d=>d.Recipient.Photos.FirstOrDefault(e=>e.IsMain).Url));
        }
     }
 }
