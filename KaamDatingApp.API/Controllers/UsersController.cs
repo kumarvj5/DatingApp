@@ -6,6 +6,7 @@ using AutoMapper;
 using KaamDatingApp.API.Data;
 using KaamDatingApp.API.Dtos;
 using KaamDatingApp.API.Helpers;
+using KaamDatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -61,6 +62,31 @@ namespace KaamDatingApp.API.Controllers
             throw new Exception($"Updating User {id} failed on Save");
         }
 
+        [HttpPost("{id}/like/{recepientId}")]
+        public async Task<IActionResult> LikeUser(int id, int recepientId)
+        {
+            if (id!= int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();  
+                
+            var like = await _repo.GetLike(id, recepientId);
+            if (like!=null)
+                return BadRequest("You already liked this user");
 
+            if (await _repo.GetUser(recepientId) == null)
+                return NotFound();
+
+            like = new Like
+            {
+                LikerId = id,
+                LikeeId = recepientId
+            };
+            _repo.Add<Like>(like);
+
+            if (await _repo.SaveAll())
+                return Ok();
+
+                return BadRequest("Failed to like User");
+
+        }
     }
 }

@@ -27,6 +27,11 @@ namespace KaamDatingApp.API.Data
             _context.Remove(entity);
         }
 
+        public async Task<Like> GetLike(int userId, int recepientId)
+        {
+            return await _context.Likes.FirstOrDefaultAsync(u =>u.LikerId == userId && u.LikeeId == recepientId);
+        }
+
         public async Task<Photo> GetMainPhotoForUser(int userId)
         {
             return await _context.Photos.Where(u => u.UserId==userId).FirstOrDefaultAsync(p => p.IsMain);
@@ -49,6 +54,18 @@ namespace KaamDatingApp.API.Data
             var users =  _context.Users.Include(p => p.Photos).OrderByDescending(c=>c.LastActive).AsQueryable();
             users = users.Where(c=>c.Id != userParams.UserId);
             users = users.Where(c=>c.Gender == userParams.Gender);
+
+            if (userParams.Likers)
+            {
+                var userLikers = await GetUserLikes(userParams.UserId, userParams.Likers);
+                users = users.Where(c=> userLikers.Contains(c.Id));
+            }
+            else
+            {
+                var userLikers = await GetUserLikes(userParams.UserId, userParams.Likers);
+                users = users.Where(c=> userLikers.Contains(c.Id));
+            }
+            
             if (userParams.MinAge != 18 || userParams.MaxAge != 99)
             {
                 var minDob = DateTime.Today.AddYears(-userParams.MaxAge-1);
@@ -71,6 +88,21 @@ namespace KaamDatingApp.API.Data
             return await PagedList<User>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
         }
 
+        private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
+        {
+            var user = await _context.Users.Include(c=>c.Likers)
+                                         .Include(c=>c.Likees)
+                                         .FirstOrDefaultAsync(c=>c.Id == id);
+
+            if (likers)
+            {
+                return user.Likers.Where(c=>c.LikeeId==id).Select(c=>c.LikerId);
+            }
+            else
+            {
+                return user.Likers.Where(c=>c.LikerId==id).Select(c=>c.LikeeId);
+            }                                         
+        }
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;

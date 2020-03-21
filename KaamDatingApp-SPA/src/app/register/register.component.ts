@@ -4,7 +4,6 @@ import { AlertifyService } from '../_services/alertify.service';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
 import { User } from '../_models/user';
-import { error } from 'util';
 import { Router } from '@angular/router';
 
 @Component({
