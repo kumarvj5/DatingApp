@@ -51,3 +51,9 @@
     border-top: 1px solid #eee;
     padding: 15px 0;
   }
+  html {
+    height: 100%;
+  }
+  body {
+    min-height: 100%;
+  }

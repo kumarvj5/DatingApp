@@ -15,7 +15,7 @@ values: any;
   ngOnInit() {
   }
   registerToggle(){
-    this.registerMode= !this.registerMode;
+    this.registerMode = !this.registerMode;
   }
 
   cancelRegisterMode(registerMode: boolean){

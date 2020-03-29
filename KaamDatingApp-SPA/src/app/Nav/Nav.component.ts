@@ -38,4 +38,7 @@ logOut() {
   this.alertify.message('logged out');
   this.router.navigate(['/home']);
 }
+clear() {
+  this.model.clear;
+}
 }
