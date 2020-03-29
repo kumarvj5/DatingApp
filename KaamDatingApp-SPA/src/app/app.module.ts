@@ -73,8 +73,8 @@ export function tokenGetter(){
       BsDatepickerModule.forRoot(),
       JwtModule.forRoot({
          config: {
-            tokenGetter: tokenGetter,
-            whitelistedDomains: ['localhost:5000'],
+            tokenGetter,
+            whitelistedDomains: ['localhost:5000', 'localhost'],
             blacklistedRoutes: ['localhost:5000/api/auth']
          }
       })
