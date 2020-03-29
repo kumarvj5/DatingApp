@@ -45,13 +45,13 @@ namespace KaamDatingApp.API.Data
 
         public async Task<User> GetUser(int id)
         {
-            var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(u => u.Id==id);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id==id);
             return(user);
         }
 
         public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
-            var users =  _context.Users.Include(p => p.Photos).OrderByDescending(c=>c.LastActive).AsQueryable();
+            var users =  _context.Users.OrderByDescending(c=>c.LastActive).AsQueryable();
             users = users.Where(c=>c.Id != userParams.UserId);
             users = users.Where(c=>c.Gender == userParams.Gender);
 
@@ -90,9 +90,7 @@ namespace KaamDatingApp.API.Data
 
         private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
         {
-            var user = await _context.Users.Include(c=>c.Likers)
-                                         .Include(c=>c.Likees)
-                                         .FirstOrDefaultAsync(c=>c.Id == id);
+            var user = await _context.Users.FirstOrDefaultAsync(c=>c.Id == id);
 
             if (likers)
             {
@@ -120,9 +118,7 @@ namespace KaamDatingApp.API.Data
 
         public async Task<IEnumerable<Message>> GetMessageThread(int id, int recepientId)
         {
-            var messages = await _context.Messages.Include(c=>c.Sender).ThenInclude(c=>c.Photos)
-                                                  .Include(c=>c.Recipient).ThenInclude(c=>c.Photos)
-                                                  .Where(c=>c.RecipientId == id && c.RecipientDeleted==false && c.SenderId == recepientId ||
+            var messages = await _context.Messages.Where(c=>c.RecipientId == id && c.RecipientDeleted==false && c.SenderId == recepientId ||
                                                         c.RecipientId == recepientId && c.SenderId == id && c.SenderDeleted==false)
                                                   .OrderByDescending(c=>c.MessageSent)
                                                   .ToListAsync();
@@ -132,9 +128,7 @@ namespace KaamDatingApp.API.Data
 
         public async Task<PagedList<Message>> GetMessagesGorUser(MessageParams messageParams)
         {
-            var messages = _context.Messages.Include(c=>c.Sender).ThenInclude(c=>c.Photos)
-                                                  .Include(c=>c.Recipient).ThenInclude(c=>c.Photos)
-                                                  .AsQueryable();
+            var messages = _context.Messages.AsQueryable();
 
             switch (messageParams.MessageContainer)
             {
