@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-Nav',
@@ -11,7 +12,6 @@ import { Router } from '@angular/router';
 export class NavComponent implements OnInit {
   model: any = {};
   photoUrl: string;
-
   constructor(public authService: AuthService, private alertify: AlertifyService, private router: Router) { }
 
   ngOnInit() {
@@ -37,8 +37,8 @@ logOut() {
   this.authService.currentUser = null;
   this.alertify.message('logged out');
   this.router.navigate(['/home']);
+  this.model.username = '';
+  this.model.password = '';
 }
-clear() {
-  this.model.clear;
-}
+
 }

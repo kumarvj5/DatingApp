@@ -9,7 +9,7 @@ namespace KaamDatingApp.API.Dtos
         public string Username { get; set; }
 
         [Required]
-        [StringLength(8,MinimumLength=5, ErrorMessage="You should enter between 5 and 8")]
+        [StringLength(12,MinimumLength=5, ErrorMessage="You should enter between 5 and 12")]
         public string Password { get; set; }
         [Required]
         public string Gender { get; set; }

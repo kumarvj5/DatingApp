@@ -40,7 +40,7 @@ namespace KaamDatingApp.API.Controllers
 
             var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
             var userToReturn = _mapper.Map<UserForListDetailDto>(createdUser);
-            return CreatedAtRoute("GetUser",new {controller = "Users", id= createdUser.Id, userToReturn});
+            return StatusCode(201);
         }
 
         [HttpPost("login")]

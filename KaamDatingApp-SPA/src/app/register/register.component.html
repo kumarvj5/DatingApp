@@ -51,10 +51,10 @@
        && registerForm.get('password').touched">Password is required</div>
        <div class="invalid-feedback" 
        *ngIf="registerForm.get('password').hasError('minlength') 
-       && registerForm.get('password').touched">Password must be atleast 4 characters</div>
+       && registerForm.get('password').touched">Password must be atleast 5 characters</div>
        <div class="invalid-feedback" 
        *ngIf="registerForm.get('password').hasError('maxlength') 
-       && registerForm.get('password').touched">Password must be max 8 characters</div>
+       && registerForm.get('password').touched">Password must be max 12 characters</div>
   </div>
  
   <div class="form-group">
