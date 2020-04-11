@@ -98,7 +98,8 @@ namespace KaamDatingApp.API.Data
             }
             else
             {
-                return user.Likers.Where(c=>c.LikerId==id).Select(c=>c.LikeeId);
+                return user.Likees.Where(c=>c.LikerId==id).Select(c=>c.LikeeId);
+
             }                                         
         }
         public async Task<bool> SaveAll()
